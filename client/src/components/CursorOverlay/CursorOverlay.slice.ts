@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-interface Cursor {
-  userId: string;
+export interface Cursor {
+  userId?: string;
   x: number;
   y: number;
 }

@@ -33,6 +33,13 @@ io.on("connection", (socket: Socket) => {
 
         socket.broadcast.emit('whiteboard-clear')
     })
+
+    socket.on('cursor-position', (cursorData) => {
+        socket.broadcast.emit('cursor-position', {
+            ...cursorData,
+            userId: socket.id
+        })
+    })
 });
 
 app.get("/", (req, res) => {

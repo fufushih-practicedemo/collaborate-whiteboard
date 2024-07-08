@@ -18,6 +18,10 @@ import Menu from "../Menu";
 import { updateElement as updateElementInStore } from "./Whiteboard.slice";
 import { RootState } from "../../store/store";
 import { WhiteboardElement } from "./Whiteboard-types";
+import { emitCursorPosition } from "../../socketConn/socketConn";
+
+let emitCursor = true;
+let lastCursorPosition: {x: number, y: number};
 
 const Whiteboard = () => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -145,6 +149,20 @@ const Whiteboard = () => {
 
 	const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
 		const { clientX, clientY } = event;
+
+		lastCursorPosition = {x: clientX, y: clientY};
+
+		if (emitCursor) {
+			emitCursorPosition({x: clientX, y: clientY});
+			emitCursor = false;
+
+			setTimeout(()=> {
+				emitCursor = true;
+
+				emitCursorPosition(lastCursorPosition);
+			}, 50);
+		}
+
 
 		if (action === actions.DRAWING) {
 			const index = elements.findIndex((element: WhiteboardElement) => element.id === selectedElement?.id);

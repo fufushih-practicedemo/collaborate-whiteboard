@@ -1,6 +1,7 @@
 import { Socket, io } from "socket.io-client";
 import store from "../store";
 import { setElements, updateElement } from "../components/Whiteboard/Whiteboard.slice";
+import { Cursor, updateCursorPosition } from "../components/CursorOverlay/CursorOverlay.slice";
 
 let socket: Socket;
 
@@ -23,6 +24,10 @@ export const connectWithSocketServer = () => {
 		socket.on("whiteboard-clear", () => {
 			store.dispatch(setElements([]));
 		});
+
+		socket.on("cursor-position", (cursorData) => {
+			store.dispatch(updateCursorPosition(cursorData));
+		})
 	}
 };
 
@@ -33,3 +38,7 @@ export const emitElementUpdate = (elementData: any) => {
 export const emitClearWhiteboard = () => {
 	socket.emit("whiteboard-clear");
 };
+
+export const emitCursorPosition = (cursorData: Cursor) => {
+	socket.emit("cursor-position", cursorData);
+}

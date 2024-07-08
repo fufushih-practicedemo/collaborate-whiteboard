@@ -41,3 +41,7 @@ body {
 	border: none;
 	background: #e8d5c4;
 }
+
+.cursor {
+	transition: 0.1s
+}
