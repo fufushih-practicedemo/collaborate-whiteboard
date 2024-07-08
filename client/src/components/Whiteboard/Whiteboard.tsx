@@ -12,6 +12,7 @@ import {
 	getElementAtPosition,
 	getResizedCoordinates,
 	updateElement,
+	updatePencilElementWhenMoving,
 } from "../../utils";
 import Menu from "../Menu";
 import { updateElement as updateElementInStore } from "./Whiteboard.slice";
@@ -100,6 +101,15 @@ const Whiteboard = () => {
 
 					setSelectedElement({ ...element, offsetX, offsetY });
 				}
+
+				if (element && element.type === toolTypes.PENCIL) {
+					setAction(actions.MOVING);
+
+					const xOffsets = element.points.map((point: any) => clientX - point.x);
+					const yOffsets = element.points.map((point: any) => clientY - point.y);
+
+					setSelectedElement({ ...element, xOffsets, yOffsets })
+				}
 				break;
 			}
 		}
@@ -160,6 +170,26 @@ const Whiteboard = () => {
 			if (event.target instanceof HTMLElement) {
 				event.target.style.cursor = element ? getCursorForPosition(element.position) : "default";
 			}
+		}
+
+		if (
+			selectedElement &&
+			toolType === toolTypes.SELECTION &&
+			action === actions.MOVING &&
+			selectedElement.type === toolTypes.PENCIL
+		) {
+			const newPoints = selectedElement.points.map((_: any, index: number) => ({
+				x: clientX - selectedElement.xOffsets[index],
+				y: clientY - selectedElement.yOffsets[index],
+			}))
+
+			const index = elements.findIndex((el) => el.id === selectedElement.id)
+
+			if (index !== -1) {
+				updatePencilElementWhenMoving({ index , newPoints}, elements);
+			}
+
+			return;
 		}
 
 		if (toolType === toolTypes.SELECTION && action === actions.MOVING && selectedElement) {

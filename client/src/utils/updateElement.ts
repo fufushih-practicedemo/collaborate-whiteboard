@@ -4,6 +4,20 @@ import { toolTypes } from "../constants";
 import { emitElementUpdate } from "../socketConn/socketConn";
 import { store } from "../store/store";
 
+export const updatePencilElementWhenMoving = ({index, newPoints}: any, elements: any[]) => {
+	const elementsCopy = [...elements];
+
+	elementsCopy[index] = {
+		...elementsCopy[index],
+		points: newPoints
+	}
+
+	const updatedPencilElement = elementsCopy[index];
+
+	store.dispatch(setElements(elementsCopy));
+	emitElementUpdate(updatedPencilElement);
+}
+
 export const updateElement = ({ id, x1, x2, y1, y2, type, text, index }: any, elements: any[]) => {
 	const elementsCopy = [...elements];
 
