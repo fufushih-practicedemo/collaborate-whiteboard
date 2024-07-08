@@ -1,9 +1,11 @@
 import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
-import whiteboardSlice from "../components/Whiteboard/Whiteboard.slice";
+import whiteboardSliceReducer from "../components/Whiteboard/Whiteboard.slice";
+import cursorSliceReducer from "../components/CursorOverlay/CursorOverlay.slice";
 
 export const store = configureStore({
 	reducer: {
-		whiteboard: whiteboardSlice,
+		whiteboard: whiteboardSliceReducer,
+		cursor: cursorSliceReducer
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
