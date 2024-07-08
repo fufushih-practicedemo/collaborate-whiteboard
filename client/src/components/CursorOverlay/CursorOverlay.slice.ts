@@ -33,9 +33,12 @@ const cursorSlice = createSlice({
 					userId, x, y
 				};
 			}
+		},
+		removeCursorPosition: (state, action: PayloadAction<string>) => {
+			state.cursors = state.cursors.filter((c) => c.userId !== action.payload);
 		}
 	}
 })
 
-export const { updateCursorPosition } = cursorSlice.actions;
+export const { updateCursorPosition, removeCursorPosition } = cursorSlice.actions;
 export default cursorSlice.reducer;
